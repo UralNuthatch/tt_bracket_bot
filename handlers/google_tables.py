@@ -23,6 +23,6 @@ def get_participants(tournament: str):
 
     # Extract the data from the response
     data = response.get('values', [])
-    data = [[num, name.rstrip("\t\t").rstrip(), rttf] for num, name, rttf in data]
+    data = [[d[0], d[1].rstrip("\t\t").rstrip(), d[2]] for d in data if len(d) == 3]
 
     return data
