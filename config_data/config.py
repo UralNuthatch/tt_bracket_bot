@@ -10,10 +10,11 @@ class TgBot:
 @dataclass
 class Config:
     tgbot: TgBot
+    google_doc: str
 
 
 def load_config(path: str | None = None) -> Config:
     env = Env()
     env.read_env(path)
 
-    return Config(tgbot=TgBot(token=env("BOT_TOKEN")))
+    return Config(tgbot=TgBot(token=env("BOT_TOKEN")), google_doc=env("GOOGLE_DOC"))

@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  llm_bot:
+    image: "uralnuthatch/tt_bracket_bot:latest"
+    container_name: "tt_bracket_bot"
+    restart: "unless-stopped"
+    volumes:
+      - "./.env:/tt_bracket_bot/.env"
+      - "./credentials.json:/tt_bracket_bot/credentials.json"
