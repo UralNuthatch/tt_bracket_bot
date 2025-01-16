@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
@@ -39,13 +40,10 @@ async def get_players_375plus(message: Message, participants: dict):
         await message.answer("Что-то пошло не так")
 
 
-@router.callback_query(F.data == "refresh_rttf_375plus")
-async def refresh_rttf_375plus(callback: CallbackQuery, participants: dict):
+# Обновление рттф рейтингов запускается в отдельном потоке
+async def refresh_rttf_375plus_task(participants: dict, callback: CallbackQuery):
     try:
-        await callback.message.edit_text(text=callback.message.text)
-        await callback.message.answer("Идет обновление рейтингов RTTF...")
-
-        refresh_rttf_ratings(participants["375plus"])
+        await refresh_rttf_ratings(participants["375plus"])
         players = ""
         for player in participants["375plus"]:
             players += " ".join(player) + "\n"
@@ -53,6 +51,19 @@ async def refresh_rttf_375plus(callback: CallbackQuery, participants: dict):
         button_groups = InlineKeyboardButton(text="ГРУППЫ", callback_data="create_groups_375plus")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_groups]])
         await callback.message.answer(text=players, reply_markup=keyboard)
+    except Exception as ex:
+        logging.error(ex)
+        await callback.message.answer("Что-то пошло не так")
+
+
+@router.callback_query(F.data == "refresh_rttf_375plus")
+async def refresh_rttf_375plus(callback: CallbackQuery, participants: dict):
+    try:
+        await callback.message.edit_text(text=callback.message.text)
+        await callback.message.answer("Идет обновление рейтингов RTTF...")
+
+        asyncio.create_task(refresh_rttf_375plus_task(participants, callback))
+        
     except Exception as ex:
         logging.error(ex)
         await callback.message.answer("Что-то пошло не так")
@@ -95,13 +106,10 @@ async def get_players_300_575(message: Message, participants: dict):
         await message.answer("Что-то пошло не так")
 
 
-@router.callback_query(F.data == "refresh_rttf_300_575")
-async def refresh_rttf_300_575(callback: CallbackQuery, participants: dict):
+# Обновление рттф рейтингов запускается в отдельном потоке
+async def refresh_rttf_300_575_task(participants: dict, callback: CallbackQuery):
     try:
-        await callback.message.edit_text(text=callback.message.text)
-        await callback.message.answer("Идет обновление рейтингов RTTF...")
-
-        refresh_rttf_ratings(participants["300_575"])
+        await refresh_rttf_ratings(participants["300_575"])
         players = ""
         for player in participants["300_575"]:
             players += " ".join(player) + "\n"
@@ -109,6 +117,19 @@ async def refresh_rttf_300_575(callback: CallbackQuery, participants: dict):
         button_groups = InlineKeyboardButton(text="ГРУППЫ", callback_data="create_groups_300_575")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_groups]])
         await callback.message.answer(text=players, reply_markup=keyboard)
+    except Exception as ex:
+        logging.error(ex)
+        await callback.message.answer("Что-то пошло не так")
+
+
+@router.callback_query(F.data == "refresh_rttf_300_575")
+async def refresh_rttf_300_575(callback: CallbackQuery, participants: dict):
+    try:
+        await callback.message.edit_text(text=callback.message.text)
+        await callback.message.answer("Идет обновление рейтингов RTTF...")
+
+        asyncio.create_task(refresh_rttf_300_575_task(participants, callback))
+
     except Exception as ex:
         logging.error(ex)
         await callback.message.answer("Что-то пошло не так")
@@ -151,13 +172,10 @@ async def get_players_boloto(message: Message, participants: dict):
         await message.answer("Что-то пошло не так")
 
 
-@router.callback_query(F.data == "refresh_rttf_boloto")
-async def refresh_rttf_boloto(callback: CallbackQuery, participants: dict):
+# Обновление рттф рейтингов запускается в отдельном потоке
+async def refresh_rttf_boloto_task(participants: dict, callback: CallbackQuery):
     try:
-        await callback.message.edit_text(text=callback.message.text)
-        await callback.message.answer("Идет обновление рейтингов RTTF...")
-
-        refresh_rttf_ratings(participants["boloto"])
+        await refresh_rttf_ratings(participants["boloto"])
         players = ""
         for player in participants["boloto"]:
             players += " ".join(player) + "\n"
@@ -165,6 +183,18 @@ async def refresh_rttf_boloto(callback: CallbackQuery, participants: dict):
         button_groups = InlineKeyboardButton(text="ГРУППЫ", callback_data="create_groups_boloto")
         keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_groups]])
         await callback.message.answer(text=players, reply_markup=keyboard)
+    except Exception as ex:
+        logging.error(ex)
+        await callback.message.answer("Что-то пошло не так")
+
+
+@router.callback_query(F.data == "refresh_rttf_boloto")
+async def refresh_rttf_boloto(callback: CallbackQuery, participants: dict):
+    try:
+        await callback.message.edit_text(text=callback.message.text)
+        await callback.message.answer("Идет обновление рейтингов RTTF...")
+        asyncio.create_task(refresh_rttf_boloto_task(participants, callback))
+
     except Exception as ex:
         logging.error(ex)
         await callback.message.answer("Что-то пошло не так")

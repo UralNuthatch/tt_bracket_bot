@@ -1,3 +1,4 @@
+import asyncio
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -23,7 +24,7 @@ def get_options():
     return options
 
 
-def get_rttf_player(driver: webdriver.Chrome, name: str, old_rating: str):
+async def get_rttf_player(driver: webdriver.Chrome, name: str, old_rating: str):
     driver.get(f"https://rttf.ru/players/?cities[]=r59&name={name}")
     wait = WebDriverWait(driver, 10, 1)
     RTTF_LOCATOR = ("xpath", "//table//dfn")
@@ -41,20 +42,21 @@ def get_rttf_player(driver: webdriver.Chrome, name: str, old_rating: str):
     return new_rating
 
 
-def refresh_rttf_ratings(players):
+async def refresh_rttf_ratings(players):
     options = get_options()
     driver = webdriver.Chrome(options=options)
     for player in players:
         name, rttf = player[1], player[2]
         if rttf == "-":
             continue
-        new_rating = get_rttf_player(driver, name, rttf)
+        new_rating = await get_rttf_player(driver, name, rttf)
+        await asyncio.sleep(0.1)
         if new_rating is None:
                 player.append("⁉")
                 return
         if new_rating != rttf:
             if int(new_rating) > int(player[2]):
-                player.append("⬆")
+                player.append(f"⬆ ({player[2]})")
             else:
-                player.append("⬇")
+                player.append(f"⬇ ({player[2]})")
             player[2] = new_rating
